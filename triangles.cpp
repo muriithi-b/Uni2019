@@ -2,57 +2,53 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
 class Triangle {
-    vector<double> sides;
-    bool isRightAngled = false;
-
-    public:
-    Triangle(double a, double b, double c) {
-        sides.push_back(a);
-        sides.push_back(b);
-        sides.push_back(c);
-
-        sort(sides.begin(), sides.end());
-        checkTriangleType();
-    }
-    void checkTriangleType() {
-        double base_sq = sides[0] * sides [0];
-        double height_sq = sides[1] * sides[1];
-        double hyp_sq = sides[2] * sides[2];
-        if (hyp_sq == (base_sq + height_sq)) {
-            isRightAngled = true;
+    int sideA, sideB, sideC;
+    
+    bool checkValidity(int a, int b, int c) {
+        //check if the dimensions are valid for a triangle
+        if (a + b > c && a + c > b && c + b > a) {
+            return true;
+        }else {
+            return false;
         }
     }
-    double featureNotImplemented() {
-        cout << "Feature not implemented yet" << endl;
-        return 0;
+
+    public:
+    Triangle(int a, int b, int c) {
+        if (!checkValidity(a, b, c)) {
+            /*----------------------------
+              Implement Exception
+              ----------------------------
+            */
+            cout << "Sides provided not valid for a triangle." << endl;
+            cout << "You\'ll be provided with a default triangle bwoy." << endl;
+            sideA = 3; sideB = 4; sideC = 5;
+        }else {
+            sideA = a; sideB = b; sideC = c;
+        }
+    }
+    int getPerimeter() {
+        return sideA + sideB + sideC;
     }
     double getArea() {
-        return isRightAngled ? 0.5 * sides[0] * sides[1] : featureNotImplemented();
-    }
-    double getPerimeter() {
-        return sides[0] + sides[1] + sides[2];
+        //Using Heron's Formula
+        double semi_per = (double)getPerimeter() / 2;
+        return sqrt(semi_per * (semi_per - sideA) * (semi_per - sideB) * (semi_per - sideC));
     }
 };
 
-int main () {
-    Triangle tr1(5, 3,4);
-    cout << "The perimeter is: " << tr1.getPerimeter() << endl;
-    cout << "The Area is: " << tr1.getArea() << endl;
-
-    double values[3];
-    for (int i = 0; i < 3; i++) {
-        cout << "Enter triangle side: ";
-        cin >> values[i];
-        cout << endl;
-    }
-    Triangle tr2(values[0], values[1], values[2]);
-    cout << "The perimeter is: " << tr2.getPerimeter() << endl;
-    cout << "The Area is: " << tr2.getArea() << endl;
-
+int main() {
+    int a, b, c;
+    cout << "Enter dimension of triangle delimetered by space" << endl;
+    cout << ">> ";
+    cin >> a; cin >> b; cin >> c;
+    Triangle t1(a, b, c);
+    cout << "Perimeter: " << t1.getPerimeter() << endl;
+    cout << "Area: " << t1.getArea() << endl;
     return 0;
-
 }
